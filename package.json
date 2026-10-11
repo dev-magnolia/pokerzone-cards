@@ -1,0 +1,99 @@
+{
+  "name": "@pokerzon/cards",
+  "version": "0.1.0",
+  "description": "PokerZON playing cards: card notation ([As Kd], {Th 7c}, A\u2660, 10/T, x = unknown suit) parsing and formatting, helpers, SVG rendering, React components, Markdown/HTML plugins and a DOM layer.",
+  "keywords": [
+    "poker",
+    "playing-cards",
+    "cards",
+    "hand-history",
+    "react",
+    "svg",
+    "remark",
+    "rehype"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/dev-magnolia/pokerzone-cards#readme",
+  "bugs": {
+    "url": "https://github.com/dev-magnolia/pokerzone-cards/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-magnolia/pokerzone-cards.git"
+  },
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./svg": {
+      "types": "./dist/svg/index.d.ts",
+      "import": "./dist/svg/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./dom": {
+      "types": "./dist/dom/index.d.ts",
+      "import": "./dist/dom/index.js"
+    },
+    "./remark": {
+      "types": "./dist/plugins/remark.d.ts",
+      "import": "./dist/plugins/remark.js"
+    },
+    "./rehype": {
+      "types": "./dist/plugins/rehype.d.ts",
+      "import": "./dist/plugins/rehype.js"
+    },
+    "./styles.css": "./styles/cards.css",
+    "./themes/*": "./styles/themes/*",
+    "./backs/*": "./backs/*",
+    "./fonts/*": "./fonts/*",
+    "./cards.json": "./data/cards.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "styles",
+    "backs",
+    "fonts",
+    "data",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "gen": "node scripts/gen-data.mjs",
+    "build": "npm run gen && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.build.json",
+    "typecheck": "npm run gen && tsc -p tsconfig.json",
+    "test": "npm run gen && tsx --test test/*.test.ts test/*.test.tsx",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tsx": "^4.19.2",
+    "typescript": "6.0.3"
+  }
+}

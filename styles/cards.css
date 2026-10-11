@@ -1,0 +1,106 @@
+/* @pokerzon/cards — styles (design: pokerzon-docs design/pokerzon/cards, brand guide 12 Cards).
+   Faces: .pzc--bold · .pzc--soft · .pzc--split   Minis: .pzc--tile · .pzc--tag   Backs: .pzb--slogan · .pzb--symbol (+ .pzb--muck)
+   Hands: .pzh--spread · --tight · --fan · --fan-tight   Board: .pzbd   Inline text: .pzi
+   Deck: [data-deck="two"] on the card or any ancestor.   Surface: .pz-dark on an ancestor or [data-surface="dark"] on the card.
+   Size: --w (card width); height = 1.4 × width.   Suits: Z-cut from 32 px suit height, solid below. */
+@import "./themes/pokerzon.css";
+
+@font-face{font-family:"PZ Cards Rank";font-weight:700;font-style:normal;font-display:block;
+ src:url("../fonts/pz-cards-rank.woff2") format("woff2")}
+
+/* suit colours: --rk (rank, solid suit), --u / --l (the two halves of the Z-cut suit), --tu / --tl (Soft's pale suit) */
+[data-s="spade"]{--rk:var(--pz-spade-1);--u:var(--pz-spade-u);--l:var(--pz-spade-l);--tu:var(--pz-spade-tu);--tl:var(--pz-spade-tl);--dk:var(--pz-spade-d1)}
+[data-s="heart"]{--rk:var(--pz-heart-1);--u:var(--pz-heart-u);--l:var(--pz-heart-l);--tu:var(--pz-heart-tu);--tl:var(--pz-heart-tl);--dk:var(--pz-heart-d1)}
+[data-s="diamond"]{--rk:var(--pz-diamond-1);--u:var(--pz-diamond-u);--l:var(--pz-diamond-l);--tu:var(--pz-diamond-tu);--tl:var(--pz-diamond-tl);--dk:var(--pz-diamond-d1)}
+[data-s="club"]{--rk:var(--pz-club-1);--u:var(--pz-club-u);--l:var(--pz-club-l);--tu:var(--pz-club-tu);--tl:var(--pz-club-tl);--dk:var(--pz-club-d1)}
+[data-s="x"]{--rk:var(--pz-x-1);--u:var(--pz-x-u);--l:var(--pz-x-l);--tu:var(--pz-x-tu);--tl:var(--pz-x-tl);--dk:var(--pz-x-d1)}
+
+.pzc{--w:64px;position:relative;box-sizing:border-box;flex:none;display:inline-block;width:var(--w);height:calc(var(--w)*1.4);
+ border-radius:calc(var(--w)*.10);background:var(--pz-card-face);overflow:hidden;font-family:var(--pz-rank-font);color:var(--rk);
+ box-shadow:0 0 0 1px var(--pz-card-edge),0 2px 6px rgba(9,11,12,.08);vertical-align:middle;line-height:1}
+.pz-dark .pzc,.pzc[data-surface="dark"]{box-shadow:0 1px 0 rgba(0,0,0,.25),0 2px 8px rgba(0,0,0,.25)}
+.pzc .rk{position:absolute;left:9%;top:7%;font-weight:700;line-height:.8;letter-spacing:0;z-index:2;font-style:normal}
+.pzc svg{display:block;overflow:visible}
+
+/* Bold: big rank, big Z-cut suit running off the right and bottom edge */
+.pzc--bold .rk{font-size:calc(var(--w)*.56)}
+.pzc--bold .big{position:absolute;height:calc(var(--w)*1.0);width:calc(var(--w)*1.0*.94624);right:calc(var(--w)*-.15*.94624);bottom:calc(var(--w)*-.10)}
+
+/* Soft: corner index (rank + small suit), a pale bleed suit behind */
+.pzc--soft .ix{position:absolute;left:9%;top:7%;display:flex;flex-direction:column;align-items:center;gap:calc(var(--w)*.05);z-index:2}
+.pzc--soft .ix .rk{position:static;font-size:calc(var(--w)*.52)}.pzc--soft .ix svg{height:calc(var(--w)*.24);width:calc(var(--w)*.24*.94624)}
+.pzc--soft .big{position:absolute;height:calc(var(--w)*.86);width:calc(var(--w)*.86*.94624);right:calc(var(--w)*-.86*.17*.94624);bottom:calc(var(--w)*-.86*.07);--u:var(--tu);--l:var(--tl)}
+
+/* Split: colour face cut in two tones by one line; the cut narrows to 65 % on the left; white rank and solid suit */
+.pzc--split{color:#FFFFFF;background:#FFFFFF}.pz-dark .pzc--split,.pzc--split[data-surface="dark"]{background:#0D1112}
+.pzc--split .fu,.pzc--split .fl{position:absolute;inset:0}
+.pzc--split .fu{background:var(--u);clip-path:polygon(0 0,100% 0,100% 50%,0 41.875%)}
+.pzc--split .fl{background:var(--l);clip-path:polygon(0 45.125%,100% 55%,100% 100%,0 100%)}
+.pzc--split .rk{font-size:calc(var(--w)*.52)}
+.pzc--split .br{position:absolute;right:8%;bottom:6%;height:calc(var(--w)*.46);width:calc(var(--w)*.46*.94624);--s1:#FFFFFF}
+.pz-dark .pzc--split[data-s="spade"],.pzc--split[data-surface="dark"][data-s="spade"],
+.pz-dark [data-deck="two"].pzc--split[data-s="club"],.pz-dark[data-deck="two"] .pzc--split[data-s="club"],[data-deck="two"] .pz-dark .pzc--split[data-s="club"],
+[data-deck="two"].pzc--split[data-surface="dark"][data-s="club"],[data-deck="two"] .pzc--split[data-surface="dark"][data-s="club"]{--u:var(--pz-split-neutral-dark-u);--l:var(--pz-split-neutral-dark-l)}
+
+/* Minis (hand history): Tile = rank over suit, Tag = rank next to suit; white (with Bold / Soft) or colour (with Split) */
+.pzc--tile,.pzc--tag{display:inline-flex;align-items:center;justify-content:center;border-radius:4px;margin:0 2px;vertical-align:middle}
+.pzc--tile{width:26px;height:34px;flex-direction:column;gap:1px}.pzc--tag{width:36px;height:24px;flex-direction:row;gap:2px}
+.pzc--tile .rk,.pzc--tag .rk{position:static;line-height:.85;text-align:center;-webkit-user-select:none;user-select:none}
+.pzc--tile .rk{font-size:14px}.pzc--tag .rk{font-size:15px;line-height:1}
+.pzc--tile svg{height:11px;width:10.41px}.pzc--tag svg{height:12px;width:11.35px}
+.pzc--tile svg,.pzc--tag svg{-webkit-user-select:none;user-select:none;flex:none}
+.pzc--mini-colour{background:var(--l);color:#FFFFFF;--s1:#FFFFFF}
+.pz-dark .pzc--mini-colour[data-s="spade"],.pzc--mini-colour[data-surface="dark"][data-s="spade"],
+.pz-dark [data-deck="two"].pzc--mini-colour[data-s="club"],.pz-dark[data-deck="two"] .pzc--mini-colour[data-s="club"],[data-deck="two"] .pz-dark .pzc--mini-colour[data-s="club"],
+[data-deck="two"].pzc--mini-colour[data-surface="dark"][data-s="club"]{--l:var(--pz-split-neutral-dark-l)}
+.pzc .ct,.pzct{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* Backs: .pzb--slogan (default) · .pzb--symbol; .pzb--muck = a folded card. Same back at every size. */
+.pzb{background:#090B0C center/cover no-repeat;box-shadow:0 0 0 1px #C9D1D3,0 2px 6px rgba(9,11,12,.12)}
+.pz-dark .pzb,.pzb[data-surface="dark"]{box-shadow:0 0 0 1px var(--pz-card-edge-dark),0 2px 8px rgba(0,0,0,.35)}
+.pzb--slogan{background-image:url("../backs/back-slogan.svg")}.pzb--symbol{background-image:url("../backs/back-symbol.svg")}
+.pzb--slogan.pzb--muck{background-image:url("../backs/back-slogan-muck.svg")}.pzb--symbol.pzb--muck{background-image:url("../backs/back-symbol-muck.svg")}
+/* hand-history unknown card: .pzc--tile / .pzc--tag + .pzb-mini (+ .pzb--muck); copies as ?? */
+.pzb-mini{background:#090B0C center/cover no-repeat}.pzc--tile.pzb-mini{background-image:url("../backs/back-mini-tile.svg")}
+.pzc--tag.pzb-mini{background-image:url("../backs/back-mini-tag.svg")}
+.pzc--tile.pzb-mini.pzb--muck{background-image:url("../backs/back-mini-tile-muck.svg")}.pzc--tag.pzb-mini.pzb--muck{background-image:url("../backs/back-mini-tag-muck.svg")}
+.pz-dark .pzb-mini,.pzb-mini[data-surface="dark"]{box-shadow:0 0 0 1px var(--pz-card-edge-dark)}
+
+/* empty board slot */
+.pzc--slot{background:transparent;box-shadow:none;border:1.5px dashed var(--pz-slot)}
+.pz-dark .pzc--slot,.pzc--slot[data-surface="dark"]{border-color:var(--pz-slot-dark)}
+
+/* flip (deal / showdown): .pzflip > .pzflip-in > .pzflip-back + .pzflip-face; add .is-open to show the face */
+.pzflip{--w:64px;display:inline-block;perspective:600px;width:var(--w);height:calc(var(--w)*1.4);vertical-align:middle}
+.pzflip-in{position:relative;display:block;width:100%;height:100%;transition:transform .45s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.pzflip.is-open .pzflip-in{transform:rotateY(180deg)}.pzflip-back,.pzflip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}.pzflip-face{transform:rotateY(180deg)}
+@media (prefers-reduced-motion:reduce){.pzflip-in{transition:none}}
+
+/* Hands (hole cards): .pzh + layout; set --w on .pzh. Tight: 2 cards −55 %, 4–5 cards −50 %. Fan: an arc. */
+.pzh{--w:56px;display:inline-flex;align-items:flex-end;padding:calc(var(--w)*.2) calc(var(--w)*.18) 4px;vertical-align:middle}.pzh>.pzc,.pzh>.pzflip{transform-origin:50% 120%}
+.pzh--spread>*+*{margin-left:calc(var(--w)*-.25)}
+.pzh--tight>*+*,.pzh--fan-tight>*+*{margin-left:calc(var(--w)*-.55)}
+.pzh--tight:has(>:nth-child(4))>*+*{margin-left:calc(var(--w)*-.50)}
+.pzh--fan>*+*{margin-left:calc(var(--w)*-.50)}.pzh--fan:not(:has(>:nth-child(3)))>*+*{margin-left:calc(var(--w)*-.40)}
+.pzh--fan>:first-child:nth-last-child(2),.pzh--fan-tight>:first-child:nth-last-child(2){transform:rotate(-5deg)}
+.pzh--fan>:nth-child(2):last-child,.pzh--fan-tight>:nth-child(2):last-child{transform:rotate(5deg)}
+.pzh--fan>:first-child:nth-last-child(3){transform:rotate(-8deg)}
+.pzh--fan>:first-child:nth-last-child(3)~:nth-child(2){transform:translateY(calc(var(--w)*-.08))}
+.pzh--fan>:first-child:nth-last-child(3)~:nth-child(3){transform:rotate(8deg)}
+.pzh--fan>:first-child:nth-last-child(4){transform:rotate(-12deg)}
+.pzh--fan>:first-child:nth-last-child(4)~:nth-child(2){transform:translateY(calc(var(--w)*-.10)) rotate(-4deg)}
+.pzh--fan>:first-child:nth-last-child(4)~:nth-child(3){transform:translateY(calc(var(--w)*-.10)) rotate(4deg)}
+.pzh--fan>:first-child:nth-last-child(4)~:nth-child(4){transform:rotate(12deg)}
+.pzh--fan>:first-child:nth-last-child(5){transform:rotate(-16deg)}
+.pzh--fan>:first-child:nth-last-child(5)~:nth-child(2){transform:translateY(calc(var(--w)*-.08)) rotate(-8deg)}
+.pzh--fan>:first-child:nth-last-child(5)~:nth-child(3){transform:translateY(calc(var(--w)*-.12))}
+.pzh--fan>:first-child:nth-last-child(5)~:nth-child(4){transform:translateY(calc(var(--w)*-.08)) rotate(8deg)}
+.pzh--fan>:first-child:nth-last-child(5)~:nth-child(5){transform:rotate(16deg)}
+
+/* Board: five places, empty ones as slots */
+.pzbd{--w:64px;display:inline-flex;gap:calc(var(--w)*.1);vertical-align:middle}
+
+/* Text: groups of cards (mode "cards") and inline coloured text (mode "inline") */
+.pzcg{display:inline-flex;gap:6px;align-items:flex-end;vertical-align:middle;flex-wrap:wrap}
+.pzi{font-weight:600;color:var(--rk);white-space:nowrap}
+.pz-dark .pzi,.pzi[data-surface="dark"]{color:var(--dk)}

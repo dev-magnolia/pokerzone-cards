@@ -1,0 +1,57 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { CardText, Hand, Card } from "../../src/react/index.tsx";
+
+<Meta title="Introduction" />
+
+# @pokerzon/cards
+
+PokerZON playing cards for every surface: **pokerzon.com**, **asiapokerhub.com**, PEL, iZY CMS content, embeds and the server.
+The design is the PokerZON card system (brand guide → 12 Cards); the plan: `pokerzon-docs/docs/dev/CARDS-LIBRARY.md` (D-168).
+
+<div className="pz-row" style={{ margin: "18px 0" }}>
+  <Card card="As" size={88} />
+  <Card card="Kh" face="soft" size={88} />
+  <Card card="Qd" face="split" size={88} />
+  <Hand cards="Jc Th" layout="fan" size={64} />
+</div>
+
+<p className="pz-text"><CardText>Villain shows [Ah Kx] on {"{Th 7c 2d}"} — hero had A♠ K♦.</CardText></p>
+
+## Install
+
+```bash
+npm install github:dev-magnolia/pokerzone-cards#v0.1.0
+```
+
+## Entry points
+
+- **`@pokerzon/cards`** — core, no dependencies: `parseCard`, `parseCards`, `tokenize`, `formatCard(s)`, `toSymbolText`, `toLetterText`, `normalize`, `validateHand`, `sortCards`, `suitColour`, `cardLabel` …
+- **`@pokerzon/cards/react`** — `Card`, `MiniCard`, `CardBack`, `Hand`, `Board`, `FlipCard`, `CardText`, `InlineCard`, `CardsProvider`, `CardsSprite`, `useCardsSettings`, `useCopyHand`
+- **`@pokerzon/cards/svg`** — standalone SVG strings: `renderCardSvg`, `renderMiniSvg`, `renderSuitSvg`, `renderBackSvg` (OG images, e-mail, PNG)
+- **`@pokerzon/cards/dom`** — without React: `renderToHtml`, `renderCardsIn`, `defineCardElements` (`<pz-card>`, `<pz-hand>` …), `installCopyHandler`
+- **`@pokerzon/cards/remark`**, **`/rehype`** — Markdown / MDX and HTML plugins
+- **`@pokerzon/cards/styles.css`** — styles and the PokerZON theme (rank font and backs included)
+
+## Quick start (React)
+
+```tsx
+import "@pokerzon/cards/styles.css";
+import { CardsProvider, Card, Hand, CardText } from "@pokerzon/cards/react";
+
+<CardsProvider deck="four" face="bold">
+  <Hand cards="As Kd Jh Tc" layout="fan" />
+  <Card card="10h" face="split" size={72} />
+  <CardText>Flop [As Kd 7c]</CardText>
+</CardsProvider>
+```
+
+## Notation (D-168)
+
+- Rank: `A K Q J T 9 … 2` and **`10`**, lower case too.
+- Suit: `s h d c` (upper case too), `♠ ♥ ♦ ♣`, outlined `♤ ♡ ♢ ♧`, emoji variants; **`x`** = unknown suit (grey card); `Xx` / `??` = unknown card.
+- Groups: `[As Kd]` and `{As Kd}` are the same; separators: space, comma or none (`AsKd`, `10sKd`).
+- A group is replaced only if every item is a card — `[1]`, `[sic]`, `{note}` stay text; `\[` turns it off.
+- The letter form (`As`) is read only inside brackets; the symbol form (`A♠`) anywhere.
+- Canonical form (storage, API): `As Kd Th 7c`. Running text shows the symbol form (A♠).
+
+Use the toolbar to switch the **deck** (four / two colours) and the **surface** (light / dark).

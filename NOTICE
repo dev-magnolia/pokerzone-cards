@@ -1,0 +1,10 @@
+@pokerzon/cards — third-party material and brand assets
+
+1. Rank font: fonts/pz-cards-rank.woff2 is a subset (A K Q J T 9–2 ? x) of Outfit 700
+   by the Outfit Project Authors, licensed under the SIL Open Font License 1.1 (fonts/OFL-outfit.txt).
+   The rank outlines in src/generated/shapes.ts are derived from the same font.
+
+2. Brand assets: the suit shapes (the spade is the PokerZON logo symbol), the card faces, the colours and the
+   card backs (backs/*.svg, with the PokerZON logo and slogan) are part of the PokerZON brand
+   (brand guide: pokerzon-docs design/pokerzon). The MIT license covers the code; using the PokerZON brand
+   assets outside PokerZON products needs permission from Magnolia ITS.
