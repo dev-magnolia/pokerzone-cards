@@ -14,7 +14,9 @@ test("svg: card faces, minis, backs, suits", () => {
     assert.match(s, /aria-label="Ten of hearts"/);
     assert.ok(!/NaN|undefined/.test(s), face);
   }
-  assert.match(renderCardSvg("Ax", { face: "bold" }), /stroke-dasharray/);
+  assert.match(renderCardSvg("Ax", { face: "bold" }), /<path d="M45\.36 67\.26/);
+  assert.ok(!/dasharray/.test(cardHtml("Ax")));
+  assert.match(inlineHtml("Kx"), />K\?<\/span>$/);
   assert.match(renderCardSvg("Ac", { face: "split", surface: "dark", deck: "two" }), /#4A5357/);
   assert.match(renderMiniSvg("Qd", { shape: "tile" }), /width="26" height="34"/);
   assert.match(renderMiniSvg("Qd", { shape: "tag", colour: true }), /fill="#004EB6"/);

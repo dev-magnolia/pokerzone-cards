@@ -9,6 +9,8 @@ export interface CardsData {
   /** The suit box: x, y, width, height (all four suits end on the same line). */
   viewBox: [number, number, number, number];
   suits: Record<"spade" | "heart" | "diamond" | "club", { upper: string; lower: string; solid: string }>;
+  /** Unknown suit (`Ax`): a question mark in the suit box, ending on the suit baseline. */
+  unknownSuit: string;
   ranks: {
     unitsPerEm: number;
     capHeight: number;

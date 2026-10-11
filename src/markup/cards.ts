@@ -4,7 +4,7 @@ import { cardLabel, cardsLabel, type Locale } from "../core/labels.ts";
 import { toCard, toCards } from "../core/parse.ts";
 import { tokenize, type TokenizeOptions } from "../core/tokenize.ts";
 import type { BackVariant, Card, CardInput, CardsInput, Deck, Face, HandLayout, MiniShape, Suit, Surface } from "../core/types.ts";
-import { SUIT_PATHS, VIEWBOX } from "../generated/shapes.ts";
+import { SUIT_PATHS, UNKNOWN_SUIT_PATH, VIEWBOX } from "../generated/shapes.ts";
 import { h, type Child, type VNode } from "./vnode.ts";
 
 /** Options shared by every card. Deck and surface are written on the element only when given. */
@@ -18,14 +18,17 @@ export interface CommonOptions {
 }
 
 const VB = VIEWBOX.join(" ");
+/** The question mark (unknown suit) on a big, bleeding suit: lifted so the dot stays on the card. */
+export const UNKNOWN_LIFT = "translate(0 -10)";
 const suitName = (s: Suit | null) => (s === null ? "x" : SUIT_NAME[s]);
 const cls = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(" ");
 
-/** Inline suit. `cut`: the two-part Z-cut suit (32 px and up); else the solid suit. An unknown suit is a dashed ring. */
+/** Inline suit. `cut`: the two-part Z-cut suit (32 px and up); else the solid suit. An unknown suit is a question mark. */
 export function suitNode(suit: Suit | null, opts: { cut?: boolean; className?: string; sprite?: boolean } = {}): VNode {
   const a = { class: opts.className, viewBox: VB, "aria-hidden": "true", focusable: "false" };
   if (suit === null) {
-    return h("svg", a, h("circle", { cx: 50, cy: 52, r: 30, fill: "none", stroke: "var(--s1,var(--rk))", "stroke-width": 7, "stroke-dasharray": "11 8" }));
+    // On the big (bleeding) suit the question mark is lifted so its dot stays on the card.
+    return h("svg", a, h("path", { d: UNKNOWN_SUIT_PATH, fill: "var(--s1,var(--rk))", transform: opts.cut ? UNKNOWN_LIFT : undefined }));
   }
   const name = SUIT_NAME[suit];
   if (opts.sprite) return h("svg", a, h("use", { href: `#pzs-${name}-${opts.cut ? "cut" : "solid"}` }));
@@ -209,5 +212,5 @@ export function inlineNode(input: CardInput, o: CommonOptions = {}): VNode {
   return h("span", {
     class: cls("pzi", o.className), "data-s": suitName(card.suit), "data-deck": o.deck, "data-surface": o.surface,
     "data-c": text, "data-l": cardKey(card), title: cardLabel(card, o.locale),
-  }, (card.rank ?? "X") + (card.suit ? SUIT_SYMBOL[card.suit] : "x"));
+  }, (card.rank ?? "X") + (card.suit ? SUIT_SYMBOL[card.suit] : "?"));
 }

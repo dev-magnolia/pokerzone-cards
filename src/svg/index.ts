@@ -3,14 +3,15 @@
  * (Outfit 700), so the result needs no font. The geometry follows styles/cards.css.
  */
 import { COLOUR_DATA } from "../generated/colours.ts";
-import { RANK_GLYPHS, SUIT_PATHS, VIEWBOX } from "../generated/shapes.ts";
+import { RANK_GLYPHS, SUIT_PATHS, UNKNOWN_SUIT_PATH, VIEWBOX } from "../generated/shapes.ts";
 import { SUIT_NAME } from "../core/constants.ts";
+import { UNKNOWN_LIFT } from "../markup/cards.ts";
 import { cardLabel } from "../core/labels.ts";
 import { toCard } from "../core/parse.ts";
 import type { BackVariant, CardInput, Deck, Face, MiniShape, Suit, Surface } from "../core/types.ts";
 import type { Tones } from "../core/data-types.ts";
 
-export { SUIT_PATHS, RANK_GLYPHS, VIEWBOX };
+export { SUIT_PATHS, RANK_GLYPHS, UNKNOWN_SUIT_PATH, VIEWBOX };
 
 const AR = VIEWBOX[2] / VIEWBOX[3];
 const G = RANK_GLYPHS;
@@ -42,7 +43,8 @@ function suitAt(suit: Suit | null, x: number, y: number, h: number, colours: [st
   const t = `translate(${n(x)} ${n(y)}) scale(${+k.toFixed(5)}) translate(${-VIEWBOX[0]} ${-VIEWBOX[1]})`;
   if (suit === null) {
     const c = Array.isArray(colours) ? colours[1] : colours;
-    return `<g transform="${t}"><circle cx="50" cy="52" r="30" fill="none" stroke="${c}" stroke-width="7" stroke-dasharray="11 8"/></g>`;
+    const lift = Array.isArray(colours) ? ` transform="${UNKNOWN_LIFT}"` : "";
+    return `<g transform="${t}"><path d="${UNKNOWN_SUIT_PATH}" fill="${c}"${lift}/></g>`;
   }
   const p = SUIT_PATHS[SUIT_NAME[suit]];
   return Array.isArray(colours)

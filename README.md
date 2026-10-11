@@ -36,7 +36,7 @@ The build runs on install (`prepare`). React (≥ 19) is an optional peer depend
 | --- | --- | --- |
 | Rank | `A K Q J T 9 … 2`, **`10`**, lower case (`a k q j t`) | upper case, `T` |
 | Suit | `s h d c` (upper case too), `♠ ♥ ♦ ♣`, outlined `♤ ♡ ♢ ♧`, emoji variants (`♥️`) | `s h d c` |
-| Unknown suit | `x` / `X` (`Ax`, `tx`) — drawn as a grey card | `x` |
+| Unknown suit | `x` / `X` (`Ax`, `tx`) — drawn as a grey card with a question mark (`A?`) | `x` |
 | Unknown card | `Xx`, `xx`, `XX`, `??` — drawn as a back | `Xx` |
 
 - Groups: `[As Kd 7c]` and `{As Kd 7c}` mean the same. Separators: spaces, commas, semicolons or none (`AsKd`, `10sKd`).

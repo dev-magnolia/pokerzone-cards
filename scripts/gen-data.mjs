@@ -14,6 +14,7 @@ export const COLOUR_DATA: CardsData["colours"] = ${JSON.stringify(data.colours)}
 writeFileSync(new URL("src/generated/shapes.ts", root), `${head}import type { CardsData } from "../core/data-types.ts";
 export const VIEWBOX: CardsData["viewBox"] = ${JSON.stringify(data.viewBox)};
 export const SUIT_PATHS: CardsData["suits"] = ${JSON.stringify(data.suits)};
+export const UNKNOWN_SUIT_PATH: CardsData["unknownSuit"] = ${JSON.stringify(data.unknownSuit)};
 export const RANK_GLYPHS: CardsData["ranks"] = ${JSON.stringify(data.ranks)};
 `);
 console.log("src/generated/colours.ts, shapes.ts");
