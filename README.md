@@ -12,7 +12,7 @@ Plan and decisions: `pokerzon-docs/docs/dev/CARDS-LIBRARY.md` (D-168). Storybook
 ## Install
 
 ```bash
-npm install github:dev-magnolia/pokerzone-cards#v0.1.0
+npm install github:dev-magnolia/pokerzone-cards#v0.2.0
 ```
 
 The build runs on install (`prepare`). React (≥ 19) is an optional peer dependency — only `@pokerzon/cards/react` needs it.
