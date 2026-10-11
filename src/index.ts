@@ -17,4 +17,4 @@ export {
 export { findDuplicates, validateHand, splitBoard, streetOf, compareRank, sortCards, GAME_CARDS, type HandError } from "./core/validate.ts";
 export { suitColour, suitColourKey, COLOURS, type Tone } from "./core/colours.ts";
 export { cardLabel, cardsLabel, type Locale } from "./core/labels.ts";
-export const VERSION = "0.2.0";
+export const VERSION = "0.2.1";
