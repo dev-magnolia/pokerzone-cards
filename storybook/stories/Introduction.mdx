@@ -52,6 +52,7 @@ import { CardsProvider, Card, Hand, CardText } from "@pokerzon/cards/react";
 - Groups: `[As Kd]` and `{As Kd}` are the same; separators: space, comma or none (`AsKd`, `10sKd`).
 - A group is replaced only if every item is a card — `[1]`, `[sic]`, `{note}` stay text; `\[` turns it off.
 - The letter form (`As`) is read only inside brackets; the symbol form (`A♠`) anywhere.
+- **Plain report text** (`bare: "strict"`, off by default): the letter form outside brackets too, in strict case (`Kc 3c Qd`, `the Kd on the turn`); words stay text (`as`, `asks`, an `As` that starts a sentence). See *Notation / Plain report text* and *Text / CardText*.
 - Canonical form (storage, API): `As Kd Th 7c`. Running text shows the symbol form (A♠).
 
 Use the toolbar to switch the **deck** (four / two colours) and the **surface** (light / dark).

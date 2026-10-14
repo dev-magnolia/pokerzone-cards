@@ -6,7 +6,10 @@ const meta: Meta<typeof CardText> = {
   title: "Text/CardText",
   component: CardText,
   args: { children: "Hero raises with [Ah Kd], Villain calls with {Qx Qc}. Flop [7c 2d Jh], turn A♠ — Villain mucks [?? ??].", mode: "tag" },
-  argTypes: { mode: { control: "inline-radio", options: ["tag", "tile", "inline", "cards"] } },
+  argTypes: {
+    mode: { control: "inline-radio", options: ["tag", "tile", "inline", "cards"] },
+    bare: { control: "inline-radio", options: [false, "strict"] },
+  },
   render: (a) => <p className="pz-text" style={{ maxWidth: 760 }}><CardText {...a} /></p>,
 };
 export default meta;
@@ -17,6 +20,13 @@ export const Tile: S = { args: { mode: "tile" } };
 export const Inline: S = { args: { mode: "inline" } };
 export const Cards: S = { args: { mode: "cards", size: 44 } };
 export const SplitLook: S = { args: { colour: true }, name: "Minis in the Split look" };
+export const PlainReportText: S = {
+  name: "Plain report text (bare: strict)",
+  args: {
+    bare: "strict",
+    children: "Flop Kc 3c Qd, the Kd on the turn and the river Ah. As the chips moved, he showed Kd 6s Ad Kh — 4d as well.",
+  },
+};
 
 function CopyDemo() {
   const copy = useCopyHand();
