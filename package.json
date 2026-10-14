@@ -1,6 +1,6 @@
 {
   "name": "@pokerzon/cards",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "PokerZON playing cards: card notation ([As Kd], {Th 7c}, A\u2660, 10/T, x = unknown suit) parsing and formatting, helpers, SVG rendering, React components, Markdown/HTML plugins and a DOM layer.",
   "keywords": [
     "poker",
