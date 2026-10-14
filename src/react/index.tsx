@@ -206,6 +206,8 @@ export interface CardTextProps {
   brackets?: boolean;
   /** Read bare symbol cards such as `A♠` (default true). */
   symbols?: boolean;
+  /** `"strict"`: read plain letter cards outside brackets too (`Kc 3c Qd`, a lone `Kd`) — e.g. old report text. */
+  bare?: false | "strict";
   deck?: Deck;
   surface?: Surface;
 }

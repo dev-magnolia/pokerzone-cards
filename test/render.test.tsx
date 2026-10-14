@@ -61,6 +61,11 @@ test("react: components render the same markup", () => {
   assert.equal((html.match(/pzc--tag/g) ?? []).length, 5);
   const inline = renderToStaticMarkup(<CardText mode="inline">Board A♠ K♦</CardText>);
   assert.match(inline, /<span class="pzi" data-s="spade"[^>]*>A♠<\/span> <span class="pzi" data-s="diamond"/);
+  // bare: "strict" (old report text): plain letter cards too, words untouched
+  const bare = renderToStaticMarkup(<CardText mode="inline" bare="strict">Flop Kc 3c Qd as the Kd turned</CardText>);
+  assert.equal((bare.match(/class="pzi"/g) ?? []).length, 4);
+  assert.match(bare, /as the /);
+  assert.doesNotMatch(renderToStaticMarkup(<CardText mode="inline">Flop Kc 3c Qd</CardText>), /pzi/);
 });
 
 test("remark and rehype plugins", () => {
@@ -83,4 +88,8 @@ test("remark and rehype plugins", () => {
   assert.equal(pk[1]!.tagName, "span");
   assert.deepEqual(pk[1]!.properties!.className, ["pzc", "pzc--tile"]);
   assert.equal((hast.children[1] as { children: { type: string }[] }).children[0]!.type, "text");
+  const old = { type: "root", children: [{ type: "element", tagName: "p", properties: {}, children: [{ type: "text", value: "Flop Kc 3c Qd" }] }] };
+  rehypePzCards({ mode: "tile", bare: "strict" })(old);
+  const po = (old.children[0] as { children: { tagName?: string }[] }).children;
+  assert.equal(po.filter((c) => c.tagName === "span").length, 3);
 });

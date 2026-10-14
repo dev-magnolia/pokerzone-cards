@@ -75,6 +75,45 @@ test("tokenize: escape and offsets", () => {
   assert.deepEqual(findCards("x [Ah Kx] y ??").map((c) => cardKey(c)), ["Ah", "Kx"]);
 });
 
+const marked = (text: string) =>
+  tokenize(text, { bare: "strict" })
+    .map((x) => (x.type === "text" ? x.text : `<${x.group.raw}>`))
+    .join("");
+
+test("tokenize bare: strict: plain letter cards outside brackets, as old reports write them", () => {
+  // groups of two or more, spaces or commas between (real report text)
+  assert.equal(marked("Flop Kc 3c Qd, turn 7h"), "Flop <Kc 3c Qd>, turn <7h>");
+  assert.equal(marked("He shows Kd 6s Ad Kh for two pair"), "He shows <Kd 6s Ad Kh> for two pair");
+  assert.equal(marked("8d, 7d on 10h 9c 2s"), "<8d, 7d> on <10h 9c 2s>");
+  assert.equal(findCards("Board: As Kd", { bare: "strict" }).map((c) => cardKey(c)).join(" "), "As Kd");
+  // one card alone too; an As starting a sentence is the word
+  assert.equal(marked("the Kd on the turn, then the river Ah"), "the <Kd> on the turn, then the river <Ah>");
+  assert.equal(marked("As the chips moved. As soon as the As landed"), "As the chips moved. As soon as the <As> landed");
+  assert.equal(marked("Turn As , river Ad Ac"), "Turn <As> , river <Ad Ac>");
+});
+
+test("tokenize bare: strict leaves words alone; brackets and symbols still work", () => {
+  // lower or wrong case is never bare (4d as …: "as" is a word)
+  assert.equal(marked("he checked the 4d as well"), "he checked the <4d> as well");
+  assert.equal(marked("KD QH kd qh"), "KD QH kd qh");
+  // word boundaries
+  assert.equal(marked("he asks; Khac; 2sday; x7d"), "he asks; Khac; 2sday; x7d");
+  // brackets must match ([ah} stays text), escape, symbols as before
+  assert.equal(marked("[ah} and \\[Kd] and A♠"), "[ah} and [Kd] and <A♠>");
+  assert.equal(marked("[Ah Kh] then Qd Jd"), "<[Ah Kh]> then <Qd Jd>");
+  // offsets point into the source
+  const t = "Flop Kc 3c Qd then A♠ and [Th 9h]";
+  for (const s of tokenize(t, { bare: "strict" }))
+    if (s.type === "cards") assert.equal(t.slice(s.group.start, s.group.end), s.group.raw);
+  // off by default
+  assert.equal(tokenize("Flop Kc 3c Qd").length, 1);
+});
+
+test("normalize with bare: strict writes the canonical form", () => {
+  assert.equal(normalize("Flop Kc 3c Qd, turn 10h", { bare: "strict" }), "Flop [Kc 3c Qd], turn [Th]");
+  assert.equal(normalize("Flop Kc 3c Qd"), "Flop Kc 3c Qd");
+});
+
 test("format and conversions", () => {
   assert.equal(formatCard("Th"), "T♥");
   assert.equal(formatCard("Th", { ten: "10" }), "10♥");

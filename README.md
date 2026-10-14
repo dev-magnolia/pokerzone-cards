@@ -12,7 +12,7 @@ Plan and decisions: `pokerzon-docs/docs/dev/CARDS-LIBRARY.md` (D-168). Storybook
 ## Install
 
 ```bash
-npm install github:dev-magnolia/pokerzone-cards#v0.2.1
+npm install github:dev-magnolia/pokerzone-cards#v0.3.0
 ```
 
 The build runs on install (`prepare`). React (≥ 19) is an optional peer dependency — only `@pokerzon/cards/react` needs it.
@@ -41,8 +41,22 @@ The build runs on install (`prepare`). React (≥ 19) is an optional peer depend
 
 - Groups: `[As Kd 7c]` and `{As Kd 7c}` mean the same. Separators: spaces, commas, semicolons or none (`AsKd`, `10sKd`).
 - A group is replaced only if **every** item is a card: `[1]`, `[sic]`, `{note}`, `[2024]` stay text. `\[` / `\{` turns it off.
-- The **symbol form** (`A♠`, `10♥`) is read anywhere; the **letter form** (`As`) only inside brackets (`As`, `Ad`, `Kc` are also English words).
+- The **symbol form** (`A♠`, `10♥`) is read anywhere; the **letter form** (`As`) only inside brackets (`As`, `Ad`, `Kc` are also English words) — unless `bare: "strict"` is on (below).
 - Canonical form for storage and APIs: `As Kd Th 7c`. Running text shows the symbol form (`A♠`).
+
+### Plain report text: `bare: "strict"`
+
+Live reports write cards without brackets: `Flop Kc 3c Qd`, `the Kd on the turn`. With `bare: "strict"` (off by default) the letter form is read outside brackets too, in a way that leaves words alone:
+
+| Rule | Read as cards | Stays text |
+| --- | --- | --- |
+| Strict case: the rank upper case or a digit, the suit lower case | `Kc 3c Qd`, `10h` | `4d as well` (the `as`), `KD`, `kd` |
+| Two or more in a row (spaces or commas between) are one group | `Kd 6s Ad Kh`, `8d, 7d` | — |
+| One card alone is a card too … | `the Kd on the turn`, `river Ah` | — |
+| … except an `As` that starts a sentence | `the As landed`, `turn As .` | `As the chips moved` |
+| Word boundaries: no letter or digit right before or after | — | `asks`, `Khac`, `x7d` |
+
+Brackets, `\[`, symbols and everything else work as without it. Measured on the old PEL reports (59 073 texts): 138 078 card groups found (31 without the option), no word read as a card in the samples we checked (the `As` rule above comes from them). It is an option of `tokenize` and so of everything built on it: `replaceCards`, `findCards`, `normalize`, `toSymbolText`, `<CardText bare="strict">`, `rehypePzCards({ bare: "strict" })`, `remarkPzCards({ bare: "strict" })`, `renderToHtml` / `renderCardsIn(el, { bare: "strict" })`. A report editor uses it to recognise what is typed and stores the result in a form that needs no guessing any more (PEL: `<span data-card="Kc">`, D-208; as text: `normalize(text, { bare: "strict" })` → `Flop [Kc 3c Qd]`).
 
 ## Core
 
@@ -61,16 +75,18 @@ sortCards("7c Ah As");                   // As Ah 7c
 suitColour("d", { deck: "four" });       // "#034DEB"
 cardLabel("Tx");                         // "Ten of unknown suit"
 tokenize("See [1] and [As Kd]");         // [text "See [1] and ", cards [As Kd]]
+tokenize("Flop Kc 3c Qd", { bare: "strict" });          // [text "Flop ", cards Kc 3c Qd]
+normalize("Flop Kc 3c Qd, turn 10h", { bare: "strict" }); // "Flop [Kc 3c Qd], turn [Th]"
 ```
 
 | Function | Returns | Note |
 | --- | --- | --- |
 | `parseCard(s)` · `parseCards(s)` | `Card \| null` · `Card[] \| null` | Any accepted form; `null` if not a card / not all cards. |
 | `toCard(x)` · `toCards(x)` | `Card` · `Card[]` | Card or notation in; throws on invalid notation. |
-| `tokenize(text, { brackets, symbols })` | `Segment[]` | Text and card-group segments — every renderer builds on it. |
+| `tokenize(text, { brackets, symbols, bare })` | `Segment[]` | Text and card-group segments — every renderer builds on it. `bare: "strict"`: plain report text. |
 | `replaceCards(text, fn)` · `findCardGroups` · `findCards` | `string` · `CardGroup[]` · `Card[]` | Text-level helpers. |
 | `formatCard(c, { style, ten })` · `formatCards(cs, { wrap, separator })` | `string` | `A♠` / `As`; `ten: "10"`; `wrap: "["`. |
-| `toSymbolText` · `toLetterText` · `normalize` · `normalizeCard` · `cardKey` | `string` | Whole-text conversions; canonical keys. |
+| `toSymbolText` · `toLetterText` · `normalize(text, { bare })` · `normalizeCard` · `cardKey` | `string` | Whole-text conversions; canonical keys. |
 | `findDuplicates` · `validateHand(cs, game)` · `splitBoard` · `streetOf` | — | Games: `holdem` 2, `omaha` 4, `omaha5` 5, `board` 0–5. |
 | `sortCards` · `compareRank` · `RANKS` · `SUITS` · `fullDeck()` | — | Rank high → low, then ♠ ♥ ♦ ♣. |
 | `suitColour(suit, { deck, surface, tone })` · `COLOURS` | `string` | The approved colours; unknown suit → grey. |
@@ -127,6 +143,7 @@ import rehypePzCards from "@pokerzon/cards/rehype";
 unified().use(remarkParse).use(remarkPzCards, { mode: "tag" }).use(remarkRehype, { allowDangerousHtml: true }).use(rehypeRaw)…
 unified().use(rehypeParse, { fragment: true }).use(rehypePzCards).use(rehypeStringify)…
 remarkPzCards({ output: "text" });                  // plain symbol text (RSS, meta description, push)
+rehypePzCards({ bare: "strict" });                  // old report HTML: plain letter cards too (Kc 3c Qd)
 ```
 
 Code (inline and blocks), links and `[data-no-cards]` are never touched.

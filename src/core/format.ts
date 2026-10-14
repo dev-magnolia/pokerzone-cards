@@ -60,10 +60,15 @@ export function toLetterText(text: string, options: Omit<FormatCardsOptions, "st
 
 /**
  * The canonical form for storage and APIs (D-168): letter notation, `T`, single spaces, the source bracket kept
- * (a bare symbol card gets `[…]`): `"[10H, kd]"` → `"[Th Kd]"`, `"A♠"` → `"[As]"`.
+ * (a bare symbol card gets `[…]`): `"[10H, kd]"` → `"[Th Kd]"`, `"A♠"` → `"[As]"`; with `{ bare: "strict" }`
+ * plain report text too: `"Flop Kc 3c Qd"` → `"Flop [Kc 3c Qd]"`.
  */
-export function normalize(text: string): string {
-  return replaceCards(text, (g) => formatCards(g.cards, { style: "letter", wrap: (g.bracket ?? "[") as Exclude<Bracket, null> }));
+export function normalize(text: string, options?: TokenizeOptions): string {
+  return replaceCards(
+    text,
+    (g) => formatCards(g.cards, { style: "letter", wrap: (g.bracket ?? "[") as Exclude<Bracket, null> }),
+    options
+  );
 }
 
 /** Normalizes one card notation: `"10h"` → `"Th"`; `null` if it is not a card. */
